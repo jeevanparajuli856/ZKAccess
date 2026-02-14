@@ -1,6 +1,7 @@
 use anyhow::Result;
-use clap::Parser;
 use base64::Engine;
+use clap::Parser;
+use risc0_zkvm::Receipt;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Debug)]
@@ -11,10 +12,10 @@ struct Args {
     receipt_b64: String,
 }
 
-#[derive(Deserialize)]
-struct MockJournal {
-    commitment_hex: String,
-    nonce_hex: String,
+#[derive(Serialize, Deserialize)]
+struct Journal {
+    commitment: [u8; 32],
+    nonce: Vec<u8>,
 }
 
 #[derive(Serialize)]
@@ -27,16 +28,16 @@ fn main() -> Result<()> {
     let args = Args::parse();
     let engine = base64::engine::general_purpose::STANDARD;
     let bytes = engine.decode(args.receipt_b64)?;
-    let receipt_str = String::from_utf8(bytes)?;
-    let journal: MockJournal = serde_json::from_str(&receipt_str)?;
+    let receipt: Receipt = risc0_zkvm::serde::from_slice(&bytes)?;
+    receipt.verify(methods::COMMIT_ID)?;
 
-    // In real RISC Zero, this would verify cryptographic proof
-    // For demo, we just pass through the journal
+    let journal: Journal = receipt.journal.decode()?;
 
-    println!("{}",
+    println!(
+        "{}",
         serde_json::to_string(&VerifierOut {
-            commitment_hex: journal.commitment_hex,
-            nonce_hex: journal.nonce_hex,
+            commitment_hex: hex::encode(journal.commitment),
+            nonce_hex: hex::encode(journal.nonce),
         })?
     );
     Ok(())

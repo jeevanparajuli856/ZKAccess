@@ -35,6 +35,36 @@ def _call_verifier(receipt_b64: str) -> dict:
         return {"error": "verifier_not_found"}
 
 
+def _call_prover(email: str, salt_hex: str, nonce_hex: str, password: str) -> dict:
+    """Call prover CLI as a subprocess. Expected JSON on stdout.
+    Contract: prover-cli --email <email> --salt_hex <hex> --nonce_hex <hex> --password <pw>
+    """
+    settings = current_app.config['SETTINGS']
+    bin_path = settings.PROVER_BIN
+    try:
+        result = subprocess.run(
+            [
+                bin_path,
+                "--email",
+                email,
+                "--salt_hex",
+                salt_hex,
+                "--nonce_hex",
+                nonce_hex,
+                "--password",
+                password,
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return json.loads(result.stdout)
+    except subprocess.CalledProcessError as e:
+        return {"error": f"prover_error: {e.stderr}"}
+    except FileNotFoundError:
+        return {"error": "prover_not_found"}
+
+
 @bp.route("/register/init", methods=["POST"])
 def register_init():
     data = _json()
@@ -153,11 +183,50 @@ def login_complete():
             token,
             httponly=True,
             samesite="Lax",
-            secure=False,  # set True behind TLS
+            secure=settings.JWT_COOKIE_SECURE,
             max_age=settings.JWT_EXPIRES_MIN * 60,
             path="/",
         )
         return resp
+
+
+@bp.route("/login/prove", methods=["POST"])
+def login_prove():
+    settings = current_app.config['SETTINGS']
+    if not settings.ALLOW_INSECURE_PROVER:
+        return jsonify({"error": "prover_disabled"}), 403
+
+    data = _json()
+    email = (data.get("email") or "").strip().lower()
+    challenge_id = data.get("challenge_id")
+    password = data.get("password")
+    if not (email and challenge_id and password):
+        return jsonify({"error": "missing_fields"}), 400
+
+    try:
+        ch_id = uuid.UUID(challenge_id)
+    except ValueError:
+        return jsonify({"error": "invalid_challenge_id"}), 400
+
+    with get_session() as s:
+        user = s.scalar(select(User).where(User.email == email))
+        if user is None:
+            return jsonify({"error": "user_not_found"}), 404
+        ch = s.get(LoginChallenge, ch_id)
+        if ch is None or ch.user_id != user.id:
+            return jsonify({"error": "challenge_not_found"}), 404
+        from datetime import datetime, timezone
+        if ch.consumed:
+            return jsonify({"error": "challenge_consumed"}), 400
+        now = datetime.now(timezone.utc)
+        expires = ch.expires_at if ch.expires_at.tzinfo else ch.expires_at.replace(tzinfo=timezone.utc)
+        if expires < now:
+            return jsonify({"error": "challenge_expired"}), 400
+
+        res = _call_prover(email, b2hex(user.salt), b2hex(ch.nonce), password)
+        if "error" in res:
+            return jsonify(res), 400
+        return jsonify(res)
 
 
 @bp.route("/me", methods=["GET"])

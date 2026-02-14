@@ -3,4 +3,8 @@ name = "methods"
 version = "0.1.0"
 edition = "2021"
 
-# Placeholder - full RISC Zero requires rzup SDK install
+[build-dependencies]
+risc0-build = "1.0"
+
+[dependencies]
+risc0-zkvm = "1.0"

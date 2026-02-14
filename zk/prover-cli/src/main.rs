@@ -1,9 +1,9 @@
 use anyhow::Result;
+use base64::Engine;
 use clap::Parser;
 use hex::FromHex;
+use risc0_zkvm::{default_prover, ExecutorEnv};
 use serde::{Deserialize, Serialize};
-use base64::Engine;
-use sha2::{Sha256, Digest};
 
 #[derive(Parser, Debug)]
 #[command(name = "prover-cli")] 
@@ -28,12 +28,26 @@ struct Args {
 #[derive(Serialize)]
 struct Output {
     receipt_b64: String,
+    journal: JournalOut,
 }
 
 #[derive(Serialize)]
-struct MockJournal {
+struct JournalOut {
     commitment_hex: String,
     nonce_hex: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Input {
+    salt: Vec<u8>,
+    password_utf8: Vec<u8>,
+    nonce: Vec<u8>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Journal {
+    commitment: [u8; 32],
+    nonce: Vec<u8>,
 }
 
 fn main() -> Result<()> {
@@ -41,24 +55,28 @@ fn main() -> Result<()> {
     let salt = Vec::from_hex(&args.salt_hex)?;
     let nonce = Vec::from_hex(&args.nonce_hex)?;
 
-    // Compute commitment = SHA-256(salt || password)
-    let mut hasher = Sha256::new();
-    hasher.update(&salt);
-    hasher.update(args.password.as_bytes());
-    let commitment = hasher.finalize();
-
-    // Create mock journal (in real RISC Zero, this comes from zkVM)
-    let journal = MockJournal {
-        commitment_hex: hex::encode(commitment),
-        nonce_hex: args.nonce_hex.clone(),
+    let input = Input {
+        salt,
+        password_utf8: args.password.as_bytes().to_vec(),
+        nonce,
     };
 
-    // Encode as base64 (mock receipt)
-    let journal_json = serde_json::to_string(&journal)?;
-    let engine = base64::engine::general_purpose::STANDARD;
-    let receipt_b64 = engine.encode(journal_json.as_bytes());
+    let env = ExecutorEnv::builder().write(&input)?.build()?;
+    let prover = default_prover();
+    let receipt = prover.prove(env, methods::COMMIT_ELF)?;
 
-    let out = Output { receipt_b64 };
+    let journal: Journal = receipt.journal.decode()?;
+    let engine = base64::engine::general_purpose::STANDARD;
+    let receipt_bytes = risc0_zkvm::serde::to_vec(&receipt)?;
+    let receipt_b64 = engine.encode(receipt_bytes);
+
+    let out = Output {
+        receipt_b64,
+        journal: JournalOut {
+            commitment_hex: hex::encode(journal.commitment),
+            nonce_hex: hex::encode(journal.nonce),
+        },
+    };
     let s = serde_json::to_string_pretty(&out)?;
     if let Some(path) = args.out {
         std::fs::write(path, s)?;

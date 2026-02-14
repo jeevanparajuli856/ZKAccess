@@ -33,6 +33,7 @@ API endpoints
 - POST /api/register/commit { email, salt_hex, commitment_hex } → 200
 - POST /api/login/init { email } → { challenge_id, salt_hex, nonce_hex }
 - POST /api/login/complete { email, challenge_id, receipt_b64 } → Set-Cookie JWT
+- POST /api/login/prove { email, challenge_id, password } → { receipt_b64, journal } (dev-only; gated by `ALLOW_INSECURE_PROVER=1`)
 - GET /api/me → { authenticated, sub? }
 - POST /api/logout → clears JWT cookie
 
@@ -43,7 +44,7 @@ Security properties (prototype)
 
 ## Quick Start
 
-**Demo Version**: This implementation demonstrates the zero-knowledge authentication flow. The prover computes commitments locally (password never sent), and the verifier validates them. In a production version with full RISC Zero zkVM, the commitment computation would happen inside a cryptographically verifiable VM with proper zk-SNARK proofs (requires RISC Zero SDK via `rzup` - see https://dev.risczero.com/api/zkvm/install).
+**RISC Zero Required**: This implementation uses real zkVM proving and verification. Install the RISC Zero toolchain via `rzup` before building (see https://dev.risczero.com/api/zkvm/install).
 
 **Prerequisites**: Rust stable, Python 3.11, Node 20, Docker Desktop
 ```powershell
@@ -73,6 +74,8 @@ pip install -r requirements.txt
 $env:DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/zkaccess"
 $env:JWT_SECRET="devsecret_change_me"
 $env:VERIFIER_BIN="..\zk\target\release\verifier-cli.exe"
+$env:PROVER_BIN="..\zk\target\release\prover-cli.exe"
+$env:ALLOW_INSECURE_PROVER="1"
 flask --app app.routes run --host 0.0.0.0 --port 8000
 ```
 
@@ -103,7 +106,7 @@ Output: JSON with `receipt_b64` and `journal`.
 
 Verifier (used by backend):
 ```powershell
-target\release\verifier-cli.exe --receipt_b64 <paste-receipt>
+target\release\verifier-cli.exe --receipt-b64 <paste-receipt>
 ```
 Output: { commitment_hex, nonce_hex }.
 
@@ -113,8 +116,9 @@ Output: { commitment_hex, nonce_hex }.
 	- Click Commit (frontend computes SHA-256(salt||password) and sends commitment_hex).
 2) Login
 	- Click Login Init → copies salt_hex, nonce_hex, challenge_id.
-	- Run `prover-cli` locally with salt, nonce, and password → copy `receipt_b64`.
-	- Click Complete → paste `receipt_b64` → backend verifies via `verifier-cli` and sets JWT cookie.
+	- If `ALLOW_INSECURE_PROVER=1`, the UI will request a dev receipt from `/api/login/prove` using your password.
+	- Otherwise, run `prover-cli` locally with salt, nonce, and password → copy `receipt_b64` and paste it when prompted.
+	- Click Complete → backend verifies via `verifier-cli` and sets JWT cookie.
 3) Me
 	- Visit `/api/me` or refresh UI to see authenticated state.
 
@@ -145,6 +149,6 @@ Targets: verify < 200 ms (server path), prover < 2 s on laptop.
 - Replay: enforce TTL and single-use of challenges.
 
 ## Status & Next Steps
-- Status: Initial scaffolding in place; zk guest computes commitment; CLIs and backend/frontend wired for the end-to-end flow with manual `prover-cli` step.
-- Next: tighten error handling, add Alembic migrations, automate prover from frontend via a local helper, and capture benchmark artifacts to `bench/results/`.
+- Status: zk guest computes commitment; CLIs and backend/frontend wired for end-to-end flow with optional dev prover helper.
+- Next: tighten error handling, add Alembic migrations, replace dev prover with a real local client helper, and capture benchmark artifacts to `bench/results/`.
 

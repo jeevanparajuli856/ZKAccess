@@ -12,14 +12,7 @@ A zero-knowledge proof allows you to prove you know a secret **without revealing
 
 **In ZKAccess**:
 - **Secret**: Your password
-- **Proof**: A cryptographic receipt from the zkVM attesting you computed the correct commitmentcd c:\Users\Jeevan\Desktop\ZKVM\zk
-cargo build --release
-
-# This takes 2-5 minutes on first build
-# Output should be:
-#   Finished release [optimized] target(s) in Xs
-#   prover-cli.exe (in target/release/)
-#   verifier-cli.exe (in target/release/)
+- **Proof**: A cryptographic receipt from the zkVM attesting you computed the correct commitment
 - **Verifier**: The server checks the receipt without ever seeing your password
 
 ### Commitment
@@ -79,7 +72,7 @@ risc0_build::embed_methods!({
 ```
 **Why**: The METHOD_ID is a fingerprint of the guest program. It ensures prover and verifier are using the same guest logic.
 
-### `zk/methods/src/bin/guest.rs` — The Zero-Knowledge Guest Program
+### `zk/methods/guest/src/main.rs` — The Zero-Knowledge Guest Program
 This is the code that runs **inside the zkVM**. It's no_std (no OS dependencies).
 
 **Flow**:
@@ -127,14 +120,15 @@ prover-cli.exe \
 3. **Runs the zkVM**: 
    ```rust
    let env = ExecutorEnv::builder().write(&input)?.build()?;
-   let mut prover = Prover::new(env, methods::COMMIT_ELF)?;
-   let receipt = prover.run()?;  // Runs guest, produces receipt
+  let prover = default_prover();
+  let receipt = prover.prove(env, methods::COMMIT_ELF)?;  // Runs guest, produces receipt
    ```
 4. **Encodes receipt to base64** for easy transmission
 5. **Outputs JSON**:
    ```json
    {
-     "receipt_b64": "eyJkYXRhIjog..."
+    "receipt_b64": "eyJkYXRhIjog...",
+    "journal": { "commitment_hex": "...", "nonce_hex": "..." }
    }
    ```
 
@@ -145,7 +139,7 @@ Runs on the server (subprocess called by Flask) to verify a receipt.
 
 **Input (CLI args)**:
 ```powershell
-verifier-cli.exe --receipt_b64 "eyJkYXRhIjog..."
+verifier-cli.exe --receipt-b64 "eyJkYXRhIjog..."
 ```
 
 **What it does**:
@@ -153,8 +147,7 @@ verifier-cli.exe --receipt_b64 "eyJkYXRhIjog..."
 2. Deserializes into a RISC Zero `Receipt` object
 3. **Verifies the proof**:
    ```rust
-   let ctx = risc0_zkvm::VerifierContext::default();
-   receipt.verify(&ctx, methods::COMMIT_ID)?;
+  receipt.verify(methods::COMMIT_ID)?;
    ```
    - Checks that the receipt signature is valid
    - Checks that the METHOD_ID matches (same guest logic)
@@ -186,7 +179,10 @@ Loads environment variables:
 - `DATABASE_URL`: Postgres connection string
 - `JWT_SECRET`: Secret key for signing JWT tokens
 - `VERIFIER_BIN`: Path to `verifier-cli.exe` executable
+- `PROVER_BIN`: Path to `prover-cli.exe` executable (dev-only helper)
 - `JWT_COOKIE_NAME`: Name of cookie storing JWT (default: `zkaccess_jwt`)
+- `JWT_COOKIE_SECURE`: Set `1` to mark cookie as Secure behind TLS
+- `ALLOW_INSECURE_PROVER`: Set `1` to enable `/api/login/prove` in dev
 
 ### `backend/app/db.py` — Database Initialization
 Sets up SQLAlchemy ORM:
@@ -354,10 +350,11 @@ Flow:
 ### `frontend/src/Login.tsx` — Login Form
 Flow:
 1. User enters email → Click "Init" → Gets salt, nonce, challenge_id from server
-2. User enters password → (Manually) Run `prover-cli.exe` with salt, nonce, password → Get `receipt_b64`
-3. Paste `receipt_b64` → Click "Complete" → Server verifies receipt → JWT cookie set → Logged in
+2. User enters password → If `/api/login/prove` is enabled, frontend requests a dev receipt
+3. Otherwise, run `prover-cli.exe` with salt, nonce, password → Get `receipt_b64` and paste it
+4. Click "Complete" → Server verifies receipt → JWT cookie set → Logged in
 
-**Note**: Prover-cli step is manual for demo; in production, could be automated via WASM or native binding.
+**Note**: `/api/login/prove` is a dev-only helper; in production, use a local client prover (WASM/native binding).
 
 ---
 
@@ -377,7 +374,7 @@ services:
 ### `bench/k6-login.js`
 Load test script:
 - Spins up 100 concurrent users (VUs)
-- Each makes repeated `/login/init` and `/login/complete` calls
+- Each makes repeated `/login/init`, `/login/prove` (dev-only), and `/login/complete` calls
 - Measures latency, throughput, error rates
 
 ---
@@ -413,9 +410,9 @@ Client                          Server                  Database
                                     { salt, nonce, challenge_id }
                           ←────
 
-6. Run prover-cli locally:
-   - Input: salt, nonce, password
-   - Guest computes: commitment = SHA-256(salt || password)
+6. Run prover locally (dev helper or local CLI):
+   - Option A (dev): POST /login/prove with password to get receipt_b64
+   - Option B (local): Run prover-cli with salt, nonce, password
    - Output: receipt_b64
 
 7. POST /login/complete         8. SELECT challenge by id
@@ -533,17 +530,18 @@ npm run dev
 ### Demo Login
 1. Click "Login" → Enter `user1@example.com`, password
 2. Click "Init" → Copy salt_hex, nonce_hex
-3. Run prover locally:
-   ```powershell
-   cd ..\zk
-   .\target\release\prover-cli.exe `
-     --email user1@example.com `
-     --salt_hex <paste-salt> `
-     --nonce_hex <paste-nonce> `
-     --password "Passw0rd1!"
-   ```
-4. Copy `receipt_b64` from output
-5. In UI, click "Complete" → paste receipt_b64 → logged in!
+3. If `ALLOW_INSECURE_PROVER=1`, the UI will request a dev receipt automatically
+4. Otherwise, run prover locally:
+    ```powershell
+    cd ..\zk
+    .\target\release\prover-cli.exe `
+       --email user1@example.com `
+       --salt_hex <paste-salt> `
+       --nonce_hex <paste-nonce> `
+       --password "Passw0rd1!"
+    ```
+5. Copy `receipt_b64` from output
+6. In UI, click "Complete" → paste receipt_b64 → logged in!
 
 ---
 
