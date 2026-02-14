@@ -34,7 +34,7 @@ dist/
 **/target/
 
 # Misc
-doc/
+doc1/
 *.tmp
 *.swp
 *.swo

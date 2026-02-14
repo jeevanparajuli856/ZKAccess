@@ -37,7 +37,7 @@ def _call_verifier(receipt_b64: str) -> dict:
 
 def _call_prover(email: str, salt_hex: str, nonce_hex: str, password: str) -> dict:
     """Call prover CLI as a subprocess. Expected JSON on stdout.
-    Contract: prover-cli --email <email> --salt_hex <hex> --nonce_hex <hex> --password <pw>
+    Contract: prover-cli --email <email> --salt-hex <hex> --nonce-hex <hex> --password <pw>
     """
     settings = current_app.config['SETTINGS']
     bin_path = settings.PROVER_BIN
@@ -47,9 +47,9 @@ def _call_prover(email: str, salt_hex: str, nonce_hex: str, password: str) -> di
                 bin_path,
                 "--email",
                 email,
-                "--salt_hex",
+                "--salt-hex",
                 salt_hex,
-                "--nonce_hex",
+                "--nonce-hex",
                 nonce_hex,
                 "--password",
                 password,

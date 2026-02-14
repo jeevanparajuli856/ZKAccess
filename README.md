@@ -8,7 +8,6 @@ More docs
 - [doc/QUICK_START.md](doc/QUICK_START.md)
 - [doc/SETUP_GUIDE.md](doc/SETUP_GUIDE.md)
 - [doc/RUST_CHEATSHEET.md](doc/RUST_CHEATSHEET.md)
-- [doc/HANDOFF.md](doc/HANDOFF.md)
 
 Key goals
 - Sub-200 ms verification on server path (receipt verify)
