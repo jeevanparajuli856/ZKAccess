@@ -1,0 +1,10 @@
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\debug\deps\ark_relations-e6ffa069a7fd483e.d: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\mod.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\impl_lc.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\constraint_system.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\error.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\trace.rs
+
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\debug\deps\libark_relations-e6ffa069a7fd483e.rmeta: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\mod.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\impl_lc.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\constraint_system.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\error.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\trace.rs
+
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\lib.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\mod.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\impl_lc.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\constraint_system.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\error.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-relations-0.4.0\src\r1cs\trace.rs:

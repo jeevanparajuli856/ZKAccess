@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "methods",
+    "prover-cli",
+    "verifier-cli",
+]
+resolver = "2"

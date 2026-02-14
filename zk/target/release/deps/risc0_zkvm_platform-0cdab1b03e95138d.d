@@ -1,0 +1,10 @@
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\release\deps\risc0_zkvm_platform-0cdab1b03e95138d.d: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\memory.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\syscall.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\../README.md
+
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\release\deps\librisc0_zkvm_platform-0cdab1b03e95138d.rlib: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\memory.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\syscall.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\../README.md
+
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\release\deps\librisc0_zkvm_platform-0cdab1b03e95138d.rmeta: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\memory.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\syscall.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\../README.md
+
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\lib.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\memory.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\syscall.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-zkvm-platform-1.2.6\src\../README.md:

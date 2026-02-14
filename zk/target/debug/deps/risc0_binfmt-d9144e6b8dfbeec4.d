@@ -1,0 +1,10 @@
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\debug\deps\risc0_binfmt-d9144e6b8dfbeec4.d: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\elf.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\exit_code.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\hash.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\image.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\sys_state.rs
+
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\debug\deps\librisc0_binfmt-d9144e6b8dfbeec4.rmeta: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\elf.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\exit_code.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\hash.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\image.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\sys_state.rs
+
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\lib.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\elf.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\exit_code.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\hash.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\image.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\risc0-binfmt-1.2.6\src\sys_state.rs:

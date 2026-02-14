@@ -1,0 +1,10 @@
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\debug\deps\ark_groth16-530b400075c4865d.d: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\r1cs_to_qap.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\data_structures.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\generator.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\prover.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\verifier.rs
+
+C:\Users\Jeevan\Desktop\ZKVM\zk\target\debug\deps\libark_groth16-530b400075c4865d.rmeta: C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\lib.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\r1cs_to_qap.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\data_structures.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\generator.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\prover.rs C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\verifier.rs
+
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\lib.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\r1cs_to_qap.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\data_structures.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\generator.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\prover.rs:
+C:\Users\Jeevan\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ark-groth16-0.4.0\src\verifier.rs:
