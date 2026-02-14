@@ -1,8 +1,14 @@
 # ZKAccess: Zero-Knowledge Authentication Prototype
 
-ZKAccess demonstrates privacy-preserving authentication using zero-knowledge proofs. Users prove knowledge of a password without revealing it. Built with RISC Zero zkVM (Rust), Flask (Python), React, and PostgreSQL.
+ZKAccess demonstrates privacy-preserving authentication using zero-knowledge proofs. Users prove knowledge of a password without revealing it. Built with RISC Zero zkVM (Rust), Flask (Python), static HTML/CSS/JS, and PostgreSQL.
 
-**For detailed file-by-file walkthrough, concepts, and data flows, see [README_DETAILED.md](README_DETAILED.md).**
+**For a detailed walkthrough, concepts, and data flows, see [doc/README_DETAILED.md](doc/README_DETAILED.md).**
+
+More docs
+- [doc/QUICK_START.md](doc/QUICK_START.md)
+- [doc/SETUP_GUIDE.md](doc/SETUP_GUIDE.md)
+- [doc/RUST_CHEATSHEET.md](doc/RUST_CHEATSHEET.md)
+- [doc/HANDOFF.md](doc/HANDOFF.md)
 
 Key goals
 - Sub-200 ms verification on server path (receipt verify)
@@ -13,7 +19,7 @@ Key goals
 What’s in this repo
 - zk/ (Rust): RISC Zero guest method, `prover-cli` (client), `verifier-cli` (server)
 - backend/ (Python): Flask API, SQLAlchemy models, JWT cookie auth
-- frontend/ (React): Vite app with Register/Login flows
+- frontend/ (static): HTML/CSS/JS with Register/Login flows
 - deploy/ (Docker): Postgres via docker-compose
 - bench/ (k6): E2E load script and runner
 
@@ -42,20 +48,25 @@ Security properties (prototype)
 - Nonce is one-time with TTL; prevents replay.
 - JWT in HTTP-only cookie; SameSite=Lax; set Secure=True behind TLS.
 
-## Quick Start
+## Quick Start (Windows)
 
-**RISC Zero Required**: This implementation uses real zkVM proving and verification. Install the RISC Zero toolchain via `rzup` before building (see https://dev.risczero.com/api/zkvm/install).
+**RISC Zero required**: This implementation uses real zkVM proving and verification. Install the RISC Zero toolchain via `rzup` before building (see https://dev.risczero.com/api/zkvm/install).
 
-**Prerequisites**: Rust stable, Python 3.11, Node 20, Docker Desktop
+**Prerequisites**: Rust stable, Python 3.11, Docker Desktop
 ```powershell
 winget install -e --id Rustlang.Rustup
 winget install -e --id Microsoft.VisualStudio.2022.BuildTools
 rustup default stable
-winget install -e --id OpenJS.NodeJS.LTS
 winget install -e --id Python.Python.3.11
 winget install -e --id Git.Git
 winget install -e --id Grafana.k6
 winget install -e --id Docker.DockerDesktop
+```
+
+Rust zkVM build:
+```powershell
+cd zk
+cargo build --release
 ```
 
 Start Postgres:
@@ -68,7 +79,7 @@ Backend setup and run (dev):
 ```powershell
 cd ..\backend
 py -3.11 -m venv .venv
-\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 pip install --upgrade pip
 pip install -r requirements.txt
 $env:DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/zkaccess"
@@ -76,21 +87,34 @@ $env:JWT_SECRET="devsecret_change_me"
 $env:VERIFIER_BIN="..\zk\target\release\verifier-cli.exe"
 $env:PROVER_BIN="..\zk\target\release\prover-cli.exe"
 $env:ALLOW_INSECURE_PROVER="1"
+$env:CORS_ORIGINS="http://localhost:5173"
 flask --app app.routes run --host 0.0.0.0 --port 8000
 ```
 
-Rust zkVM build:
+Seed demo users (optional, for bench):
 ```powershell
-cd ..\zk
-cargo build --release
+cd ..\backend
+py -3.11 .\scripts\seed_demo_users.py --count 25
 ```
 
-Frontend (dev server):
+Frontend (static file server):
 ```powershell
 cd ..\frontend
-npm install
-npm run dev
+py -3.11 -m http.server 5173
 ```
+Open http://localhost:5173 in a browser.
+
+If you serve the frontend from a different origin than the Flask API, set
+`CORS_ORIGINS` on the backend (comma-separated) and update the `data-api-base`
+attribute in [frontend/index.html](frontend/index.html) to the backend URL.
+
+Environment variables (backend)
+- `DATABASE_URL`: Postgres connection string
+- `JWT_SECRET`: JWT signing secret
+- `VERIFIER_BIN`: Path to `verifier-cli.exe`
+- `PROVER_BIN`: Path to `prover-cli.exe`
+- `ALLOW_INSECURE_PROVER`: Enable dev-only `/api/login/prove`
+- `CORS_ORIGINS`: Allowed frontend origins, comma-separated
 
 ## Prover and Verifier CLIs
 Prover (run locally to produce a receipt for login):

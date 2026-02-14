@@ -12,3 +12,8 @@ class Settings:
     JWT_EXPIRES_MIN: int = 30
     JWT_COOKIE_SECURE: bool = os.getenv("JWT_COOKIE_SECURE", "0").lower() in {"1", "true", "yes"}
     ALLOW_INSECURE_PROVER: bool = os.getenv("ALLOW_INSECURE_PROVER", "0").lower() in {"1", "true", "yes"}
+    CORS_ORIGINS: tuple[str, ...] = tuple(
+        origin.strip()
+        for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+        if origin.strip()
+    )

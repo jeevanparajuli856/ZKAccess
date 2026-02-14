@@ -4,9 +4,142 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZKAccess</title>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body data-api-base="http://localhost:8000">
+    <div class="page">
+      <div class="ambient-orb orb-left" aria-hidden="true"></div>
+      <div class="ambient-orb orb-right" aria-hidden="true"></div>
+
+      <header class="hero">
+        <div class="hero-text">
+          <p class="eyebrow">Zero-knowledge authentication prototype</p>
+          <h1>ZKAccess</h1>
+          <p class="lede">
+            Prove you know your password without revealing it. Powered by RISC Zero receipts and
+            a clean, auditable challenge flow.
+          </p>
+          <div class="hero-tags">
+            <span class="tag">RISC Zero zkVM</span>
+            <span class="tag">Flask API</span>
+            <span class="tag">Postgres</span>
+            <span class="tag">Static HTML</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="metric">
+            <span class="metric-label">Verifier path</span>
+            <span class="metric-value">&lt; 200 ms</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Proof generation</span>
+            <span class="metric-value">~ 2 s</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Receipt size</span>
+            <span class="metric-value">100-300 KB</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card" id="session-card" hidden>
+          <div class="card-header">
+            <div>
+              <p class="card-eyebrow">Session active</p>
+              <h2>Welcome back</h2>
+            </div>
+            <span class="status-pill">Authenticated</span>
+          </div>
+          <p class="card-body">Signed in as <strong id="session-email"></strong>.</p>
+          <div class="card-actions">
+            <button class="button ghost" id="logout-btn">Logout</button>
+            <button class="button" id="refresh-btn">Refresh session</button>
+          </div>
+        </section>
+
+        <section class="card" id="register-card">
+          <div class="card-header">
+            <div>
+              <p class="card-eyebrow">Step 1</p>
+              <h2>Create a commitment</h2>
+            </div>
+            <span class="status-pill">Register</span>
+          </div>
+          <p class="card-body">
+            The client computes a SHA-256 commitment of salt and password, keeping the password local.
+          </p>
+          <div class="form">
+            <div class="field">
+              <label class="label" for="reg-email">Email</label>
+              <input id="reg-email" placeholder="name@example.com" />
+            </div>
+            <div class="field">
+              <label class="label" for="reg-password">Password</label>
+              <input id="reg-password" placeholder="Create a strong password" type="password" />
+            </div>
+            <div class="card-actions" id="reg-actions">
+              <button class="button" id="reg-init-btn">Init registration</button>
+              <button class="button secondary" id="reg-commit-btn" hidden>Commit</button>
+              <span class="helper" id="reg-salt" hidden>
+                Salt issued: <span class="code-pill" id="reg-salt-text"></span>
+              </span>
+            </div>
+            <div class="notice" id="reg-status" hidden></div>
+            <div class="notice error" id="reg-error" hidden></div>
+          </div>
+        </section>
+
+        <section class="card" id="login-card">
+          <div class="card-header">
+            <div>
+              <p class="card-eyebrow">Step 2</p>
+              <h2>Prove and verify</h2>
+            </div>
+            <span class="status-pill">Login</span>
+          </div>
+          <p class="card-body">
+            Request a challenge, generate a receipt with the prover, then complete login with
+            the receipt output.
+          </p>
+          <div class="form">
+            <div class="field">
+              <label class="label" for="login-email">Email</label>
+              <input id="login-email" placeholder="name@example.com" />
+            </div>
+            <div class="field">
+              <label class="label" for="login-password">Password (optional for dev prover)</label>
+              <input
+                id="login-password"
+                placeholder="Only needed if dev prover is enabled"
+                type="password"
+              />
+            </div>
+            <button class="button" id="login-init-btn">Init login</button>
+
+            <div class="notice" id="login-challenge" hidden>
+              <div>Salt: <span class="code-pill" id="login-salt"></span></div>
+              <div>Nonce: <span class="code-pill" id="login-nonce"></span></div>
+              <div>Challenge: <span class="code-pill" id="login-challenge-id"></span></div>
+            </div>
+            <div class="field" id="login-receipt-field" hidden>
+              <label class="label" for="login-receipt">Receipt (base64)</label>
+              <textarea
+                id="login-receipt"
+                placeholder="Paste receipt_b64 from prover-cli if dev prover is disabled"
+              ></textarea>
+            </div>
+            <div class="card-actions" id="login-actions" hidden>
+              <button class="button secondary" id="login-complete-btn">Complete login</button>
+              <button class="button ghost" id="login-reset-btn">Reset challenge</button>
+            </div>
+            <div class="notice" id="login-status" hidden></div>
+            <div class="notice error" id="login-error" hidden></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
   </body>
 </html>
