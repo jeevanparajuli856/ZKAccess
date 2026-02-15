@@ -49,7 +49,7 @@ Security properties (prototype)
 
 ## Quick Start (Windows)
 
-**RISC Zero required**: This implementation uses real zkVM proving and verification. Install the RISC Zero toolchain via `rzup` before building (see https://dev.risczero.com/api/zkvm/install).
+**RISC Zero required**: This implementation uses real zkVM proving and verification. Install the toolchain via `cargo-risczero` (recommended on Windows).
 
 **Prerequisites**: Rust stable, Python 3.11, Docker Desktop
 ```powershell
@@ -60,6 +60,12 @@ winget install -e --id Python.Python.3.11
 winget install -e --id Git.Git
 winget install -e --id Grafana.k6
 winget install -e --id Docker.DockerDesktop
+```
+
+RISC Zero toolchain install (run from an x64 Native Tools prompt):
+```powershell
+cargo install cargo-risczero
+cargo risczero install
 ```
 
 Rust zkVM build:
