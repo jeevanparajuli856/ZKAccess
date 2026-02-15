@@ -90,20 +90,6 @@ body {
   max-width: 34rem;
 }
 
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.5rem;
-}
-
-.tag {
-  border: 1px solid var(--border);
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  background: rgba(255, 255, 255, 0.6);
-}
 
 .hero-card {
   background: var(--card);
@@ -137,6 +123,32 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+.project-summary {
+  position: relative;
+  z-index: 1;
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.6rem 1.8rem;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.6rem;
+  animation: lift-in 0.8s ease both;
+}
+
+.project-summary h2 {
+  font-family: 'Newsreader', 'Times New Roman', serif;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.project-summary p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .card {
@@ -302,9 +314,5 @@ textarea {
 @media (max-width: 600px) {
   .page {
     padding: 2.5rem 1.2rem 3.5rem;
-  }
-
-  .hero-tags {
-    gap: 0.4rem;
   }
 }
